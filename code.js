@@ -12,7 +12,6 @@ document.getElementById("Submit").onclick = function(){
     edges.push([]);
   }
 
-  console.log(edges);
   document.querySelectorAll('.edge-row').forEach((el) => {
     let inpList = el.querySelectorAll('input');
     formData.edges.push({
@@ -22,6 +21,7 @@ document.getElementById("Submit").onclick = function(){
       id : inpList[0].value + "-" + inpList[1].value
     });
     edges[inpList[0].value-1].push(inpList[1].value-1);
+    edges[inpList[1].value-1].push(inpList[0].value-1);
   })
   vertex = [];
 
@@ -30,7 +30,7 @@ document.getElementById("Submit").onclick = function(){
   
   for (var i=1;i<=formData.noofVertices;i++){
     element.push({data: {id: i.toString()}});
-    vertex.push(i);
+    vertex.push(i.toString());
   }
   
   for (var i=0;i<formData.noOfEdges;i++){
@@ -39,6 +39,8 @@ document.getElementById("Submit").onclick = function(){
   
   cy.add(element);
   cy.layout({name: 'cose'}).run();
+  console.log('vertex',vertex);
+  console.log('edges',edges);
 }
 
 document.getElementById("View").onclick = function(){
@@ -185,7 +187,6 @@ function dfs(start_vertex){
 
 let i=0;
 function animation(mylist){
-  console.log(mylist);
   if (i<mylist.length) {
     cy.getElementById(mylist[i]).addClass("highlighted");
     cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
