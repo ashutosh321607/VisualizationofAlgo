@@ -1,16 +1,81 @@
 <!DOCTYPE html>
-<!-- This code is for demonstration purposes only.  You should not hotlink to Github, Rawgit, or files from the Cytoscape.js documentation in your production apps. -->
-<html>
+<html lang="en">
 <head>
-<link href="style.css" rel="stylesheet" />
-<meta charset=utf-8 />
-<meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
-<title>Animation of Algorithm</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <title>Animation of Algorithm</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
 </head>
 <body>
-<div id="cy"></div>
-<!-- Load application code at the end to ensure DOM is loaded -->
-<script src="code.js"></script>
+  <div id="cy"></div>
+  <form class="container mx-auto" style="max-width: 700px; margin: 50px 0px;">
+      <div class="form-group">
+          <label for="exampleFormControlSelect1">Animation Type</label>
+          <select class="form-control" id="AnimationType">
+            <option>Breadth first search</option>
+            <option>Depth-first search</option>
+            <option>minimum spanning tree</option>
+          </select>
+      </div>
+
+    <div class="form-group">
+      <label for="exampleFormControlInput1">No. of Vertices</label>
+      <input type="number" class="form-control" id="NumofVertices" placeholder="Ex. {1,2,3..}">
+    </div>
+
+    <div class="form-group">
+      <label for="exampleFormControlInput1">No. of Edges</label>
+      <input type="number" class="form-control" id="NumofEdges" onchange="showContent()" placeholder="Ex. {1,2,3..}">
+    </div>
+
+    
+    <div class="form-group">
+        <label for="Edges">Edges</label> 
+        <div id="my-edges">
+
+        </div>
+    </div>
+
+      <button type="button" class="btn btn-primary mb-2">View Animation</button>
+
+      <template >
+          <div class="row" style="margin: 12px 0px;">
+            <div class="col">
+              <input type="number" class="form-control" placeholder="Start Vertex">
+            </div>
+            <div class="col">
+              <input type="number" class="form-control" placeholder="Finish Vertex">
+            </div>
+            <div class="col">
+              <input type="number" class="form-control" placeholder="Weight">
+            </div>
+          </div>
+        </template>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script>
+      function showContent() {
+        document.getElementById("my-edges").innerHTML = '';
+        temp = document.getElementsByTagName("template")[0];
+        item = temp.content.querySelector("div");
+        a = document.importNode(item, true);
+        a.textConte
+        document.getElementById("my-edges").appendChild(a);
+        for (i = 0; i < document.getElementById("NumofEdges").value-1; i++) {
+          a = document.importNode(item, true);
+          a.textConte
+          document.getElementById("my-edges").appendChild(a);
+        }
+      }
+      showContent();
+      </script>
+      <script src="code.js"></script>
 </body>
 </html>
+
+

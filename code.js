@@ -36,21 +36,21 @@ var cy = cytoscape({
 
   elements: {
       nodes: [
-        { data: { id: 'a'} },
-        { data: { id: 'b' } },
-        { data: { id: 'c' } },
-        { data: { id: 'd' } },
-        { data: { id: 'e' } }
+        { data: { id: '1'} },
+        { data: { id: '2' } },
+        { data: { id: '3' } },
+        { data: { id: '4' } },
+        { data: { id: '5' } }
       ],
 
       edges: [
-        { data: { id: 'ae', weight: 1, source: 'a', target: 'e' } },
-        { data: { id: 'ab', weight: 3, source: 'a', target: 'b' } },
-        { data: { id: 'be', weight: 4, source: 'b', target: 'e' } },
-        { data: { id: 'bc', weight: 5, source: 'b', target: 'c' } },
-        { data: { id: 'ce', weight: 6, source: 'c', target: 'e' } },
-        { data: { id: 'cd', weight: 2, source: 'c', target: 'd' } },
-        { data: { id: 'de', weight: 7, source: 'd', target: 'e' } }
+        { data: { id: '15', weight: 1, source: '1', target: '5' } },
+        { data: { id: '12', weight: 3, source: '1', target: '2' } },
+        { data: { id: '25', weight: 4, source: '2', target: '5' } },
+        { data: { id: '23', weight: 5, source: '2', target: '3' } },
+        { data: { id: '35', weight: 6, source: '3', target: '5' } },
+        { data: { id: '34', weight: 2, source: '3', target: '4' } },
+        { data: { id: '45', weight: 7, source: '4', target: '5' } }
       ]
     }
 });
