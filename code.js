@@ -1,3 +1,59 @@
+//input
+document.getElementById("Submit").onclick = function(){
+  let formData = {};
+  formData.noOfEdges = document.getElementById("NumofEdges").value;
+  formData.noofVertices = document.getElementById("NumofVertices").value;
+  formData.startvertex = document.getElementById("Start-Vertex").value;
+  formData.edges = [];
+
+  edges = [];
+  start = formData.startvertex - 1;
+  for(var i=0;i<formData.noofVertices;i++){
+    edges.push([]);
+  }
+
+  console.log(edges);
+  document.querySelectorAll('.edge-row').forEach((el) => {
+    let inpList = el.querySelectorAll('input');
+    formData.edges.push({
+      source: inpList[0].value,
+      target: inpList[1].value,
+      weight: inpList[2].value,
+      id : inpList[0].value + "-" + inpList[1].value
+    });
+    edges[inpList[0].value-1].push(inpList[1].value-1);
+  })
+  vertex = [];
+
+  cy.elements().remove();
+  var element = [];
+  
+  for (var i=1;i<=formData.noofVertices;i++){
+    element.push({data: {id: i.toString()}});
+    vertex.push(i);
+  }
+  
+  for (var i=0;i<formData.noOfEdges;i++){
+    element.push({ data: formData.edges[i] });
+  }
+  
+  cy.add(element);
+  cy.layout({name: 'cose'}).run();
+}
+
+document.getElementById("View").onclick = function(){
+  var garganimation = document.getElementById("AnimationType").value;
+  console.log(garganimation);
+  clearTimeout(timer);
+  cy.elements().removeClass("highlighted");
+  cy.elements().removeClass("highlighted_red");
+  if(garganimation === "Breadth first search"){
+    bfs_animation(start);
+  }
+  else if(garganimation === "Depth-first search"){
+    dfs_animation(start);
+  }
+}
 var cy = cytoscape({
   container: document.getElementById('cy'),
 
@@ -44,17 +100,20 @@ var cy = cytoscape({
       ],
 
       edges: [
-        { data: { id: '15', weight: 1, source: '1', target: '5' } },
-        { data: { id: '12', weight: 3, source: '1', target: '2' } },
-        { data: { id: '25', weight: 4, source: '2', target: '5' } },
-        { data: { id: '23', weight: 5, source: '2', target: '3' } },
-        { data: { id: '35', weight: 6, source: '3', target: '5' } },
-        { data: { id: '34', weight: 2, source: '3', target: '4' } },
-        { data: { id: '45', weight: 7, source: '4', target: '5' } }
+        { data: { id: '1-5', weight: 1, source: '1', target: '5' } },
+        { data: { id: '1-2', weight: 3, source: '1', target: '2' } },
+        { data: { id: '2-5', weight: 4, source: '2', target: '5' } },
+        { data: { id: '2-3', weight: 5, source: '2', target: '3' } },
+        { data: { id: '3-5', weight: 6, source: '3', target: '5' } },
+        { data: { id: '3-4', weight: 2, source: '3', target: '4' } },
+        { data: { id: '4-5', weight: 7, source: '4', target: '5' } }
       ]
     }
+
+
 });
 
+cy.layout({name: 'cose'}).run();
 //bfs
 function bfs_demo(curr_vertex,visited,mylist){
   var start_node = vertex[curr_vertex];
@@ -65,7 +124,7 @@ function bfs_demo(curr_vertex,visited,mylist){
     var my_vertex = myqueue.shift();
     for(let i=0;i<edges[my_vertex].length;i++){
       if(!visited[edges[my_vertex][i]]){
-        mylist.push(vertex[my_vertex] + vertex[edges[my_vertex][i]])
+        mylist.push(vertex[my_vertex] + "-"+ vertex[edges[my_vertex][i]])
         visited[edges[my_vertex][i]] = true;
         mylist.push(vertex[edges[my_vertex][i]])
         myqueue.push(edges[my_vertex][i])
@@ -99,12 +158,12 @@ function dfs_demo(start_vertex,visited,mylist,backedge,previous){
   visited[start_vertex] = true;
   for(var i=0;i<edges[start_vertex].length;i++){
     if(!visited[edges[start_vertex][i]]){
-      mylist.push(start_node + vertex[edges[start_vertex][i]]);
+      mylist.push(start_node + '-' + vertex[edges[start_vertex][i]]);
       backedge.push(false);
       dfs_demo(edges[start_vertex][i],visited,mylist,backedge,start_vertex);
     }
     else if( edges[start_vertex][i] != previous ){
-      mylist.push(start_node + vertex[edges[start_vertex][i]]);
+      mylist.push(start_node + '-' + vertex[edges[start_vertex][i]]);
       backedge.push(true);
     }
   }
@@ -131,9 +190,11 @@ function animation(mylist){
     cy.getElementById(mylist[i]).addClass("highlighted");
     cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
     i++;
-    setTimeout(() => animation(mylist),1200);
+    timer = setTimeout(() => animation(mylist),1200);
   }
 }
+
+let timer;
 
 function animation2(mylist,backedge){
   if (i<mylist.length) {
@@ -146,7 +207,7 @@ function animation2(mylist,backedge){
       cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_red");
     }
     i++;
-    setTimeout(() => animation2(mylist,backedge),800);
+    timer = setTimeout(() => animation2(mylist,backedge),800);
   }
 }
 
@@ -174,10 +235,18 @@ function dfs_animation(start_vertex){
 
 
 //main
-var vertex = ['a','b','c','d','e'];
+var vertex = ['1','2','3','4','5'];
 var edges = [[4,1],[0,4,2],[1,4,3],[2,4],[0,1,2,3]];
-//dfs_animation(0);
-bfs_animation(0);
+var start = 0;
+// dfs_animation(0);
+// bfs_animation(0);
 
 i = 0;
+
+
+
+
+//My Inputs
+
+
 
