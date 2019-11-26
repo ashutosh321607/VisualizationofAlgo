@@ -115,7 +115,7 @@ var cy = cytoscape({
 
 });
 
-cy.layout({name: 'cose'}).run();
+cy.layout({name: 'random'}).run();
 //bfs
 function bfs_demo(curr_vertex,visited,mylist){
   var start_node = vertex[curr_vertex];
@@ -214,7 +214,6 @@ function animation2(mylist,backedge){
 
 
 //bfs animation
-
 function bfs_animation(start_vertex) {
   i = 0;
   mylist = bfs(start_vertex);
@@ -223,7 +222,6 @@ function bfs_animation(start_vertex) {
 
 
 //dfs animation
-
 function dfs_animation(start_vertex){
   i = 0;
   var list = dfs(start_vertex);
