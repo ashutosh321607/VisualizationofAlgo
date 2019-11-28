@@ -4,7 +4,8 @@ document.getElementById("Submit").onclick = function(){
   formData.noOfEdges = document.getElementById("NumofEdges").value;
   formData.noofVertices = document.getElementById("NumofVertices").value;
   formData.edges = [];
-
+  edges_no = formData.noOfEdges*2;
+  cy.elements().removeClass("highlighted");
   edges = [];
   for(var i=0;i<formData.noofVertices;i++){
     edges.push([]);
@@ -20,10 +21,10 @@ document.getElementById("Submit").onclick = function(){
     });
     edges[inpList[0].value-1].push(inpList[1].value-1);
     edges[inpList[1].value-1].push(inpList[0].value-1);
+    edge_tuple.push([inpList[0].value-1,inpList[1].value-1,inpList[2].value]);
   })
   vertex = [];
 
-  cy.elements().remove();
   var element = [];
   
   for (var i=1;i<=formData.noofVertices;i++){
@@ -73,8 +74,18 @@ var cy = cytoscape({
         'curve-style': 'bezier',
         'width': 4,
         'line-color': '#ddd',
-        'target-arrow-color': '#ddd'
+        'target-arrow-color': '#ddd',
+        'content': 'data(weight)'
       })
+    // .selector('edges')
+    //   .style({
+    //     'curve-style': 'bezier',
+    //     'target-arrow-shape': 'triangle',
+    //     'width': 4,
+    //     'line-color': '#ddd',
+    //     'target-arrow-color': '#ddd',
+    //     'content': 'data(weight)'
+    //   })
     .selector('.highlighted')
       .style({
         'background-color': 'green',
@@ -132,7 +143,7 @@ var cy = cytoscape({
 
 });
 
-cy.layout({name: 'random'}).run();
+cy.layout({name: 'breadthfirst'}).run();
 //bfs
 function bfs_demo(curr_vertex,visited,mylist,current){
   var start_node = vertex[curr_vertex];
@@ -145,7 +156,7 @@ function bfs_demo(curr_vertex,visited,mylist,current){
     for(let i=0;i<edges[my_vertex].length;i++){
       if(!visited[edges[my_vertex][i]]){
         mylist.push(vertex[my_vertex] + "-"+ vertex[edges[my_vertex][i]]);
-        current.push(false);
+        current.push("edge");
         visited[edges[my_vertex][i]] = true;
         mylist.push(vertex[edges[my_vertex][i]]);
         current.push(false);
@@ -230,7 +241,14 @@ function dfs(start_vertex){
 let i=0;
 function animation(mylist,current){
   if (i<mylist.length) {
-    if(current[i] === 2){
+    if(current[i] === "edge"){
+      cy.getElementById(mylist[i]).removeClass("highlighted");
+      cy.getElementById(mylist[i]).removeClass("highlighted_red");
+      cy.getElementById(mylist[i]).addClass("highlighted_black");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_black");
+      
+    }
+    else if(current[i] === 2){
       cy.getElementById(mylist[i]).removeClass("highlighted");
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
       cy.getElementById(mylist[i]).addClass("highlighted_black");
@@ -242,11 +260,8 @@ function animation(mylist,current){
     }
     else{
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
-      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_red");
       cy.getElementById(mylist[i]).removeClass("highlighted_black");
-      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_black");
       cy.getElementById(mylist[i]).addClass("highlighted");
-      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
     }
     i++;
     timer = setTimeout(() => animation(mylist,current),1200);
@@ -329,7 +344,50 @@ function mst(){
 var vertex = ['1','2','3','4','5'];
 var edges = [[4,1],[0,4,2],[1,4,3],[2,4],[0,1,2,3]];
 var start = 0;
+var edge_tuple = [[0,4,1],[0,1,3],[1,4,4],[1,2,5],[2,4,6],[2,3,2],[3,4,7]];
+var edges_no = 7;
 // dfs_animation(0);
 // bfs_animation(0);
 
 i = 0;
+//min heap
+
+// class minheap(){
+
+// }
+
+
+
+//minimum spanning tree
+function Kruskels() {
+  var noOfVertex = 0;
+  var mylist = []
+  var type = []
+}
+
+function iscycle(our_vertex,edge_tuple){
+  
+  var parent = []
+  for (var i=0;i<our_vertex.length;i++){
+    parent.push(-1);
+  }
+  for (var i=0;i<edges_no;++i){
+    let x = find(parent,edge_tuple[i][0]);
+    let y = find(parent,edge_tuple[i][1]);
+
+    if(x===y) return 1;
+    Union(parent,x,y);
+  }
+  return 0; 
+}
+
+function find(parent,i){
+  if(parent[i]==-1) return i;
+  return find(parent,parent[i]);
+}
+
+function Union(parent,x,y){
+  let xset = find(parent,x);
+  let yset = find(parent,y);
+  parent[xset] = yset;
+}
