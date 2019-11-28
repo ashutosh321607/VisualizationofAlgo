@@ -3,11 +3,9 @@ document.getElementById("Submit").onclick = function(){
   let formData = {};
   formData.noOfEdges = document.getElementById("NumofEdges").value;
   formData.noofVertices = document.getElementById("NumofVertices").value;
-  formData.startvertex = document.getElementById("Start-Vertex").value;
   formData.edges = [];
 
   edges = [];
-  start = formData.startvertex - 1;
   for(var i=0;i<formData.noofVertices;i++){
     edges.push([]);
   }
@@ -45,10 +43,13 @@ document.getElementById("Submit").onclick = function(){
 
 document.getElementById("View").onclick = function(){
   var garganimation = document.getElementById("AnimationType").value;
-  console.log(garganimation);
+  start = document.getElementById("Start-Vertex").value - 1;
+  if(start===-1) start = 0;
   clearTimeout(timer);
   cy.elements().removeClass("highlighted");
   cy.elements().removeClass("highlighted_red");
+  cy.elements().removeClass("highlighted_black");
+  cy.elements().removeClass("highlighted_blue");
   if(garganimation === "Breadth first search"){
     bfs_animation(start);
   }
@@ -89,6 +90,22 @@ var cy = cytoscape({
         'target-arrow-color': 'red',
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration': '0.5s'
+      })
+    .selector('.highlighted_black')
+      .style({
+        'background-color': 'black',
+        'line-color': 'black',
+        'target-arrow-color': 'black',
+        'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration': '0.5s'
+      })
+    .selector('.highlighted_blue')
+      .style({
+        'background-color': 'blue',
+        'line-color': 'blue',
+        'target-arrow-color': 'blue',
+        'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration': '0.5s'
       }),
     
 
@@ -117,98 +134,164 @@ var cy = cytoscape({
 
 cy.layout({name: 'random'}).run();
 //bfs
-function bfs_demo(curr_vertex,visited,mylist){
+function bfs_demo(curr_vertex,visited,mylist,current){
   var start_node = vertex[curr_vertex];
   var myqueue = [curr_vertex];
   visited[curr_vertex] = true;
-  mylist.push(start_node);
   while(myqueue[0]!=undefined){
     var my_vertex = myqueue.shift();
+    mylist.push(vertex[my_vertex]);
+    current.push(true);
     for(let i=0;i<edges[my_vertex].length;i++){
       if(!visited[edges[my_vertex][i]]){
-        mylist.push(vertex[my_vertex] + "-"+ vertex[edges[my_vertex][i]])
+        mylist.push(vertex[my_vertex] + "-"+ vertex[edges[my_vertex][i]]);
+        current.push(false);
         visited[edges[my_vertex][i]] = true;
-        mylist.push(vertex[edges[my_vertex][i]])
-        myqueue.push(edges[my_vertex][i])
+        mylist.push(vertex[edges[my_vertex][i]]);
+        current.push(false);
+        myqueue.push(edges[my_vertex][i]);
       }
     }
+    mylist.push(vertex[my_vertex]);
+    current.push(2);
   }
+  
 }
 
 function bfs(start_vertex){
   var mylist = [];
+  var current = [];
   var visited = new Array(vertex.length);
   for (var i = 0;i < vertex.length ; i++) visited[i] = false;
-  bfs_demo(start_vertex,visited,mylist);
+  bfs_demo(start_vertex,visited,mylist,current);
   for(var i =0 ; i<vertex.length;i++){
     if(!visited[i]){
-      bfs_demo(i,visited,mylist);
+      bfs_demo(i,visited,mylist,current);
     }
   }
-  return mylist;
+  return [mylist,current];
 }
 
 
 //dfs
-function dfs_demo(start_vertex,visited,mylist,backedge,previous){
+function dfs_demo(start_vertex,visited,mylist,backedge,previous,current){
   if(visited[start_vertex]){
     return;
   }
   var start_node = vertex[start_vertex];
-  mylist.push(start_node);
-  backedge.push(false);
   visited[start_vertex] = true;
   for(var i=0;i<edges[start_vertex].length;i++){
+    mylist.push(start_node);
+    current.push(true);
+    backedge.push(false);
     if(!visited[edges[start_vertex][i]]){
+
       mylist.push(start_node + '-' + vertex[edges[start_vertex][i]]);
+      current.push(false);
       backedge.push(false);
-      dfs_demo(edges[start_vertex][i],visited,mylist,backedge,start_vertex);
+
+      mylist.push(start_node);
+      current.push(false);
+      backedge.push(false);
+
+      dfs_demo(edges[start_vertex][i],visited,mylist,backedge,start_vertex,current);
+
+      mylist.push(start_node + '-' + vertex[edges[start_vertex][i]]);
+      current.push(2);
+      backedge.push(false);
     }
     else if( edges[start_vertex][i] != previous ){
       mylist.push(start_node + '-' + vertex[edges[start_vertex][i]]);
       backedge.push(true);
+      current.push(false);
     }
   }
+
+  mylist.push(start_node);
+  current.push(2);
+  backedge.push(false);
 }
 
 function dfs(start_vertex){
   var mylist = [];
   var backedge = [];
+  var current = [];
   var visited = new Array(vertex.length);
   for (var i = 0;i < vertex.length ; i++) visited[i] = false;
-  dfs_demo(start_vertex,visited,mylist,backedge,undefined);
+  dfs_demo(start_vertex,visited,mylist,backedge,undefined,current);
   for(var i =0 ; i<vertex.length;i++){
     if(!visited[i]){
-      dfs_demo(i,visited,mylist,backedge,undefined);
+      dfs_demo(i,visited,mylist,backedge,undefined,current);
     }
   }
-  return {a:mylist,b:backedge};
+  return {a:mylist,b:backedge,c:current};
 }
 
 let i=0;
-function animation(mylist){
+function animation(mylist,current){
   if (i<mylist.length) {
-    cy.getElementById(mylist[i]).addClass("highlighted");
-    cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
+    if(current[i] === 2){
+      cy.getElementById(mylist[i]).removeClass("highlighted");
+      cy.getElementById(mylist[i]).removeClass("highlighted_red");
+      cy.getElementById(mylist[i]).addClass("highlighted_black");
+    }
+    else if(current[i]){
+      cy.getElementById(mylist[i]).removeClass("highlighted");
+      cy.getElementById(mylist[i]).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).addClass("highlighted_red");
+    }
+    else{
+      cy.getElementById(mylist[i]).removeClass("highlighted_red");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_red");
+      cy.getElementById(mylist[i]).removeClass("highlighted_black");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).addClass("highlighted");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
+    }
     i++;
-    timer = setTimeout(() => animation(mylist),1200);
+    timer = setTimeout(() => animation(mylist,current),1200);
   }
 }
 
 let timer;
 
-function animation2(mylist,backedge){
+function animation2(mylist,backedge,current){
   if (i<mylist.length) {
-    if(!backedge[i]){
-      cy.getElementById(mylist[i]).addClass("highlighted");
-      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
+
+    if(backedge[i]){
+      cy.getElementById(mylist[i]).addClass("highlighted_blue");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_blue");
     }
-    else{
+
+    else if(current[i]===true){
+      cy.getElementById(mylist[i]).removeClass("highlighted");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted");
+      cy.getElementById(mylist[i]).removeClass("highlighted_black");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_black");
       cy.getElementById(mylist[i]).addClass("highlighted_red");
       cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_red");
     }
+    
+    else if(current[i] === 2){
+      cy.getElementById(mylist[i]).removeClass("highlighted");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted");
+      cy.getElementById(mylist[i]).removeClass("highlighted_red");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_red");
+      cy.getElementById(mylist[i]).addClass("highlighted_black");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_black");
+    }
+
+    else{
+      cy.getElementById(mylist[i]).removeClass("highlighted_red");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_red");
+      cy.getElementById(mylist[i]).removeClass("highlighted_black");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).addClass("highlighted");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
+    }
+
     i++;
-    timer = setTimeout(() => animation2(mylist,backedge),800);
+    timer = setTimeout(() => animation2(mylist,backedge,current),800);
   }
 }
 
@@ -216,8 +299,10 @@ function animation2(mylist,backedge){
 //bfs animation
 function bfs_animation(start_vertex) {
   i = 0;
-  mylist = bfs(start_vertex);
-  animation(mylist);
+  [mylist,current] = bfs(start_vertex);
+  // console.log("mylist",mylist);
+  // console.log("current",current);
+  animation(mylist,current);
 }
 
 
@@ -225,13 +310,20 @@ function bfs_animation(start_vertex) {
 function dfs_animation(start_vertex){
   i = 0;
   var list = dfs(start_vertex);
-  mylist = list.a;
-  backedge = list.b;
-  console.log(mylist);
-  animation2(mylist,backedge);
+  var mylist = list.a;
+  var backedge = list.b;
+  var current = list.c;
+  console.log("mylist",mylist);
+  console.log("current",current);
+  console.log(backedge);
+  animation2(mylist,backedge,current);
 }
 
 
+//minimum spanning tree
+function mst(){
+
+}
 
 //main
 var vertex = ['1','2','3','4','5'];
@@ -241,11 +333,3 @@ var start = 0;
 // bfs_animation(0);
 
 i = 0;
-
-
-
-
-//My Inputs
-
-
-
