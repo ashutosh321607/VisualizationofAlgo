@@ -1,3 +1,9 @@
+//speed controller
+document.getElementById("speedControlRange").onchange = function(){
+  speed = 1600 - document.getElementById("speedControlRange").value;
+} 
+
+
 //input
 document.getElementById("Submit").onclick = function(){
   let formData = {};
@@ -245,6 +251,7 @@ function dfs(start_vertex){
 }
 
 let i=0;
+let speed = 800;
 function animation(mylist,current){
   if (i<mylist.length) {
     if(current[i] === "edge"){
@@ -270,7 +277,7 @@ function animation(mylist,current){
       cy.getElementById(mylist[i]).addClass("highlighted");
     }
     i++;
-    timer = setTimeout(() => animation(mylist,current),800);
+    timer = setTimeout(() => animation(mylist,current),speed);
   }
 }
 
@@ -312,7 +319,7 @@ function animation2(mylist,backedge,current){
     }
 
     i++;
-    timer = setTimeout(() => animation2(mylist,backedge,current),800);
+    timer = setTimeout(() => animation2(mylist,backedge,current),speed);
   }
 }
 
@@ -331,7 +338,7 @@ function animation3(mylist,type){
       cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_notpartoftree");
     }
     i++;
-    timer = setTimeout(() => animation3(mylist,type),800);
+    timer = setTimeout(() => animation3(mylist,type),speed);
   }
 }
 //bfs animation
