@@ -154,10 +154,18 @@ var cy = cytoscape({
 });
 
 cy.layout({name: 'breadthfirst'}).run();
-cy.pan({
-  x: 50,
-  y: 90 
-});
+if(screen.width < 500){
+  cy.pan({
+    x: 50,
+    y: 60
+  });
+}
+else{
+  cy.pan({
+    x:50,
+    y:-50
+  });
+}
 
 cy.panningEnabled(false);
 // cy.userPanningEnable(false);
