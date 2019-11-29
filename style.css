@@ -10,9 +10,8 @@ body {
 
 ul li::before {
   content: "\25A3";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
-  color: black; /* Change the color */
+  color: green; /* Change the color */
   font-weight: bold; /* If you want it to be bold */
-  font-size: ;
   display: inline-block; /* Needed to add space between the bullet and the text */
   width: 1em; /* Also needed for space (tweak if needed) */
   margin-left: -1em; /* Also needed for space (tweak if needed) */
@@ -22,9 +21,13 @@ ul li.red::before {
   color: red;
 }
 ul li.green::before {
-  color: green;
+  color: #ff9800;
 }
 ul li.blue::before {
   color: blue;
+}
+
+ul li.no::before {
+  color: #ce93d8;
 }
 

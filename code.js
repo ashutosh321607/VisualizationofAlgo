@@ -4,8 +4,10 @@ document.getElementById("Submit").onclick = function(){
   formData.noOfEdges = document.getElementById("NumofEdges").value;
   formData.noofVertices = document.getElementById("NumofVertices").value;
   formData.edges = [];
+  edge_tuple = [];
   edges_no = formData.noOfEdges*2;
-  cy.elements().removeClass("highlighted");
+  cy.elements().remove();
+
   edges = [];
   for(var i=0;i<formData.noofVertices;i++){
     edges.push([]);
@@ -49,13 +51,17 @@ document.getElementById("View").onclick = function(){
   clearTimeout(timer);
   cy.elements().removeClass("highlighted");
   cy.elements().removeClass("highlighted_red");
-  cy.elements().removeClass("highlighted_black");
+  cy.elements().removeClass("highlighted_orange");
   cy.elements().removeClass("highlighted_blue");
+  cy.elements().removeClass("highlighted_notpartoftree");
   if(garganimation === "Breadth first search"){
     bfs_animation(start);
   }
   else if(garganimation === "Depth-first search"){
     dfs_animation(start);
+  }
+  else{
+    mst();
   }
 }
 var cy = cytoscape({
@@ -77,20 +83,11 @@ var cy = cytoscape({
         'target-arrow-color': '#ddd',
         'content': 'data(weight)'
       })
-    // .selector('edges')
-    //   .style({
-    //     'curve-style': 'bezier',
-    //     'target-arrow-shape': 'triangle',
-    //     'width': 4,
-    //     'line-color': '#ddd',
-    //     'target-arrow-color': '#ddd',
-    //     'content': 'data(weight)'
-    //   })
     .selector('.highlighted')
       .style({
-        'background-color': 'green',
-        'line-color': 'green',
-        'target-arrow-color': 'green',
+        'background-color': '#ff9800',
+        'line-color': '#ff9800',
+        'target-arrow-color': '#ff9800',
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration': '0.5s'
       })
@@ -102,11 +99,11 @@ var cy = cytoscape({
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration': '0.5s'
       })
-    .selector('.highlighted_black')
+    .selector('.highlighted_orange')
       .style({
-        'background-color': 'black',
-        'line-color': 'black',
-        'target-arrow-color': 'black',
+        'background-color': 'green',
+        'line-color': 'green',
+        'target-arrow-color': 'green',
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration': '0.5s'
       })
@@ -117,7 +114,16 @@ var cy = cytoscape({
         'target-arrow-color': 'blue',
         'transition-property': 'background-color, line-color, target-arrow-color',
         'transition-duration': '0.5s'
+      })
+    .selector('.highlighted_notpartoftree')
+      .style({
+        'background-color': '#ce93d8',
+        'line-color': '#ce93d8',
+        'target-arrow-color': '#ce93d8',
+        'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration': '0.5s'
       }),
+    
     
 
   elements: {
@@ -244,23 +250,23 @@ function animation(mylist,current){
     if(current[i] === "edge"){
       cy.getElementById(mylist[i]).removeClass("highlighted");
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
-      cy.getElementById(mylist[i]).addClass("highlighted_black");
-      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_black");
+      cy.getElementById(mylist[i]).addClass("highlighted_orange");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_orange");
       
     }
     else if(current[i] === 2){
       cy.getElementById(mylist[i]).removeClass("highlighted");
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
-      cy.getElementById(mylist[i]).addClass("highlighted_black");
+      cy.getElementById(mylist[i]).addClass("highlighted_orange");
     }
     else if(current[i]){
       cy.getElementById(mylist[i]).removeClass("highlighted");
-      cy.getElementById(mylist[i]).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).removeClass("highlighted_orange");
       cy.getElementById(mylist[i]).addClass("highlighted_red");
     }
     else{
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
-      cy.getElementById(mylist[i]).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).removeClass("highlighted_orange");
       cy.getElementById(mylist[i]).addClass("highlighted");
     }
     i++;
@@ -281,8 +287,8 @@ function animation2(mylist,backedge,current){
     else if(current[i]===true){
       cy.getElementById(mylist[i]).removeClass("highlighted");
       cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted");
-      cy.getElementById(mylist[i]).removeClass("highlighted_black");
-      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).removeClass("highlighted_orange");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_orange");
       cy.getElementById(mylist[i]).addClass("highlighted_red");
       cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_red");
     }
@@ -292,15 +298,15 @@ function animation2(mylist,backedge,current){
       cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted");
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
       cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_red");
-      cy.getElementById(mylist[i]).addClass("highlighted_black");
-      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_black");
+      cy.getElementById(mylist[i]).addClass("highlighted_orange");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_orange");
     }
 
     else{
       cy.getElementById(mylist[i]).removeClass("highlighted_red");
       cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_red");
-      cy.getElementById(mylist[i]).removeClass("highlighted_black");
-      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_black");
+      cy.getElementById(mylist[i]).removeClass("highlighted_orange");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_orange");
       cy.getElementById(mylist[i]).addClass("highlighted");
       cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted");
     }
@@ -310,7 +316,24 @@ function animation2(mylist,backedge,current){
   }
 }
 
-
+function animation3(mylist,type){
+  if(i<mylist.length){
+    if(type[i]===1){
+      cy.getElementById(mylist[i]).removeClass("highlighted_notpartoftree");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_notpartoftree");
+      cy.getElementById(mylist[i]).addClass("highlighted_orange");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_orange");
+    }
+    else{
+      cy.getElementById(mylist[i]).removeClass("highlighted_orange");
+      cy.getElementById(mylist[i].split('').reverse().join("")).removeClass("highlighted_orange");
+      cy.getElementById(mylist[i]).addClass("highlighted_notpartoftree");
+      cy.getElementById(mylist[i].split('').reverse().join("")).addClass("highlighted_notpartoftree");
+    }
+    i++;
+    timer = setTimeout(() => animation3(mylist,type),800);
+  }
+}
 //bfs animation
 function bfs_animation(start_vertex) {
   i = 0;
@@ -337,7 +360,11 @@ function dfs_animation(start_vertex){
 
 //minimum spanning tree
 function mst(){
-
+  i = 0;
+  [mylist,type] = Kruskels();
+  console.log("mylist",mylist);
+  console.log("type",type);
+  animation3(mylist,type);
 }
 
 //main
@@ -346,32 +373,55 @@ var edges = [[4,1],[0,4,2],[1,4,3],[2,4],[0,1,2,3]];
 var start = 0;
 var edge_tuple = [[0,4,1],[0,1,3],[1,4,4],[1,2,5],[2,4,6],[2,3,2],[3,4,7]];
 var edges_no = 7;
-// dfs_animation(0);
-// bfs_animation(0);
-
 i = 0;
-//min heap
-
-// class minheap(){
-
-// }
 
 
-
+function Sort(sub){ 
+    let l = sub.length 
+    for(let i=0;i<l;i++){ 
+        for(let j=0;j<l-i-1;j++){ 
+            if (sub[j][2] > sub[j + 1][2]){ 
+                var tempo = sub[j] 
+                sub[j]= sub[j + 1] 
+                sub[j + 1]= tempo
+            }
+        }
+    } 
+    return sub 
+}
 //minimum spanning tree
 function Kruskels() {
-  var noOfVertex = 0;
-  var mylist = []
-  var type = []
+  var mylist = [];
+  edge_tuple = Sort(edge_tuple);
+  var type = [];
+  var myedgelist = [];
+  for(var i = 0;i < edge_tuple.length ;i++){
+    myedgelist.push(edge_tuple[i]);
+    mylist.push((edge_tuple[i][0]+1).toString());
+    if(iscycle(myedgelist)==0){
+      type.push(1);
+      type.push(1);
+      type.push(1);
+    }
+    else{
+      myedgelist.pop();
+      type.push(1);
+      type.push(0);
+      type.push(1);
+    }
+    mylist.push((edge_tuple[i][0]+1) + "-" + (edge_tuple[i][1]+1));
+    mylist.push((edge_tuple[i][1]+1).toString());
+  }
+  return [mylist,type];
 }
 
-function iscycle(our_vertex,edge_tuple){
+function iscycle(edge_tuple){
   
   var parent = []
-  for (var i=0;i<our_vertex.length;i++){
+  for (var i=0;i<vertex.length;i++){
     parent.push(-1);
   }
-  for (var i=0;i<edges_no;++i){
+  for (var i=0;i<edge_tuple.length;++i){
     let x = find(parent,edge_tuple[i][0]);
     let y = find(parent,edge_tuple[i][1]);
 
