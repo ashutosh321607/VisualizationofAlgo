@@ -155,7 +155,8 @@ var cy = cytoscape({
 });
 
 cy.layout({name: 'breadthfirst'}).run();
-
+cy.center();
+cy.panningEnabled(false);
 // cy.userPanningEnable(false);
 //bfs
 function bfs_demo(curr_vertex,visited,mylist,current){
