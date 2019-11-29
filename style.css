@@ -9,8 +9,9 @@ body {
 
 
 ul li::before {
-  content: "\25A3";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+  content: "\25a0";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
   color: green; /* Change the color */
+  font-size : 110%;
   font-weight: bold; /* If you want it to be bold */
   display: inline-block; /* Needed to add space between the bullet and the text */
   width: 1em; /* Also needed for space (tweak if needed) */

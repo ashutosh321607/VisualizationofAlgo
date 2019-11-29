@@ -74,7 +74,7 @@ var cy = cytoscape({
   container: document.getElementById('cy'),
   boxSelectionEnabled: false,
   autounselectify: true,
-
+  zoomingEnabled: true,
   style: cytoscape.stylesheet()
     .selector('node')
       .style({
