@@ -270,7 +270,7 @@ function animation(mylist,current){
       cy.getElementById(mylist[i]).addClass("highlighted");
     }
     i++;
-    timer = setTimeout(() => animation(mylist,current),1200);
+    timer = setTimeout(() => animation(mylist,current),800);
   }
 }
 
