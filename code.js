@@ -6,6 +6,7 @@ document.getElementById("speedControlRange").onchange = function(){
 
 //input
 document.getElementById("Submit").onclick = function(){
+  cy.panningEnabled(true);
   let formData = {};
   formData.noOfEdges = document.getElementById("NumofEdges").value;
   formData.noofVertices = document.getElementById("NumofVertices").value;
@@ -46,8 +47,8 @@ document.getElementById("Submit").onclick = function(){
   
   cy.add(element);
   cy.layout({name: 'cose'}).run();
-  console.log('vertex',vertex);
-  console.log('edges',edges);
+  cy.center();
+  cy.panningEnabled(false);
 }
 
 document.getElementById("View").onclick = function(){
@@ -154,20 +155,7 @@ var cy = cytoscape({
 });
 
 cy.layout({name: 'breadthfirst'}).run();
-if(screen.width < 500){
-  cy.pan({
-    x: 50,
-    y: 60
-  });
-}
-else{
-  cy.pan({
-    x:50,
-    y:-50
-  });
-}
 
-cy.panningEnabled(false);
 // cy.userPanningEnable(false);
 //bfs
 function bfs_demo(curr_vertex,visited,mylist,current){
