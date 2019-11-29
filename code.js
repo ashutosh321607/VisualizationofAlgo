@@ -72,7 +72,6 @@ document.getElementById("View").onclick = function(){
 }
 var cy = cytoscape({
   container: document.getElementById('cy'),
-
   boxSelectionEnabled: false,
   autounselectify: true,
 
@@ -152,10 +151,11 @@ var cy = cytoscape({
       ]
     }
 
-
 });
 
 cy.layout({name: 'breadthfirst'}).run();
+cy.panningEnabled(false);
+cy.userPanningEnable(false);
 //bfs
 function bfs_demo(curr_vertex,visited,mylist,current){
   var start_node = vertex[curr_vertex];
