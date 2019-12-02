@@ -1,9 +1,9 @@
-# VisulizationofAlgo
+# VisualizationofAlgo
 
-VisulizationOfAlgo is my webpage name. To see the webpage you can visit on this [link](https://ashutosh321607.github.io/VisulizationofAlgo/),
-or you can open it directly using index.html,
+To see this webpage you can visit on this [link](https://ashutosh321607.github.io/VisulizationofAlgo/),
+or you can open it directly using index.html
 
-functions in this visulization,
+Functions in this visulization :-
 
   - Depth first search
   - Breath first Search
