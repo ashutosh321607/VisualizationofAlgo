@@ -1,4 +1,4 @@
-# VisualizationofAlgo
+-> # VisualizationofAlgo <-
 
 To see this webpage you can visit on this [link](https://ashutosh321607.github.io/VisulizationofAlgo/),
 or you can open it directly using index.html
@@ -15,5 +15,5 @@ or you can open it directly using index.html
   - Give input using input form behind graph
   - vary speed using speed controller
     
-##### Thanking You,    
+##### Thanking You   
 ##### Author : Ashutosh Garg
