@@ -8,7 +8,6 @@ or you can open it directly using index.html
   - Depth first search
   - Breath first Search
   - Minimum spanning tree using Kruskal's algorithm
-  - lagend to show which color for which type of edge and vertex
   
 #### You can also:
   
