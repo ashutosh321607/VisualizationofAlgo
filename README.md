@@ -12,7 +12,6 @@ or you can open it directly using index.html
 #### You can also:
   
   - Give input using input form 
-  - vary speed using speed controller
-    
-##### Thanking You   
+  - control speed using speed controller
+  
 ##### Author : Ashutosh Garg
