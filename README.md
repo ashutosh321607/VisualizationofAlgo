@@ -1,6 +1,6 @@
 # VisualizationofAlgo
 
-To see this webpage you can visit on this [link](https://ashutosh321607.github.io/VisualizationofAlgo/),
+To see this webpage you can visit on this [link](https://ashutosh321607.github.io/VisualizationofAlgo/){:target="_blank"},
 or you can open it directly using index.html
 
 #### Functions in this visulization :-
